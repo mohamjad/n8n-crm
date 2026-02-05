@@ -3,8 +3,7 @@
 import React, { useState } from 'react'
 import Overview from '../components/Overview'
 import HealthDashboard from '../components/HealthDashboard'
-import AlertsPlaybooks from '../components/AlertsPlaybooks'
-import HowItWorks from '../components/HowItWorks'
+import Documentation from '../components/Documentation'
 import Sidebar from '../components/Sidebar'
 import { Tab } from '../types'
 
@@ -23,8 +22,7 @@ export default function Home() {
         <div className="px-4 py-8 sm:px-6 lg:px-8">
           {activeTab === 'overview' && <Overview />}
           {activeTab === 'dashboard' && <HealthDashboard />}
-          {activeTab === 'alerts' && <AlertsPlaybooks />}
-          {activeTab === 'how-it-works' && <HowItWorks />}
+          {activeTab === 'documentation' && <Documentation />}
         </div>
       </main>
     </div>

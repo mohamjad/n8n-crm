@@ -1,10 +1,22 @@
 import { ClientHealth, RiskTier } from '../types'
 
+function getPrimaryRiskSignal(account: Omit<ClientHealth, 'primary_risk_signal'>): string {
+  if (account.last_7d_usage_change < -20) return 'Usage drop over 7d'
+  if (account.tickets_last_14d > 8) return 'Ticket backlog growth'
+  if (account.avg_response_time > 20) return 'Response time fatigue'
+  if (account.last_payment_status === 'failed') return 'Payment retry failures'
+  if (account.last_payment_status === 'pending') return 'Payment processing delay'
+  if (account.last_7d_usage_change < -10) return 'Usage decline detected'
+  if (account.avg_response_time > 12) return 'Response latency drift'
+  if (account.expansion_signal && account.last_7d_usage_change > 20) return 'Sustained engagement increase'
+  return 'No primary signal'
+}
+
 export function getClientHealthData(): ClientHealth[] {
-  const accounts: ClientHealth[] = [
+  const baseAccounts: Omit<ClientHealth, 'primary_risk_signal'>[] = [
     {
-      account_id: 'ACC-001',
-      account_name: 'Acme Corporation',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 12500,
       health_score: 85,
@@ -16,11 +28,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-02-01',
       expansion_signal: true,
       recommended_action: 'Schedule QBR',
-      owner: 'Sarah Johnson',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-002',
-      account_name: 'TechStart Inc',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 4500,
       health_score: 45,
@@ -32,11 +44,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-15',
       expansion_signal: false,
       recommended_action: 'Call today - payment failed',
-      owner: 'Mike Chen',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-003',
-      account_name: 'Global Solutions',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 18900,
       health_score: 92,
@@ -48,11 +60,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-02-01',
       expansion_signal: true,
       recommended_action: 'Upsell opportunity',
-      owner: 'Sarah Johnson',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-004',
-      account_name: 'StartupXYZ',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Starter',
       mrr: 299,
       health_score: 25,
@@ -64,11 +76,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-10',
       expansion_signal: false,
       recommended_action: 'URGENT: Account review needed',
-      owner: 'Mike Chen',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-005',
-      account_name: 'MegaCorp Industries',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 25000,
       health_score: 78,
@@ -80,11 +92,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-28',
       expansion_signal: false,
       recommended_action: 'Monitor usage trend',
-      owner: 'David Martinez',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-006',
-      account_name: 'Innovation Labs',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 3200,
       health_score: 68,
@@ -96,11 +108,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-25',
       expansion_signal: false,
       recommended_action: 'Check-in call',
-      owner: 'Emily Davis',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-007',
-      account_name: 'CloudFirst Co',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 15200,
       health_score: 88,
@@ -112,11 +124,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-02-01',
       expansion_signal: true,
       recommended_action: 'Continue engagement',
-      owner: 'Sarah Johnson',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-008',
-      account_name: 'DataFlow Systems',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 5800,
       health_score: 55,
@@ -128,11 +140,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-20',
       expansion_signal: false,
       recommended_action: 'Payment follow-up',
-      owner: 'Mike Chen',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-009',
-      account_name: 'NextGen Solutions',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Starter',
       mrr: 199,
       health_score: 72,
@@ -144,11 +156,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-30',
       expansion_signal: false,
       recommended_action: 'Engagement campaign',
-      owner: 'Emily Davis',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-010',
-      account_name: 'Enterprise Plus',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 32000,
       health_score: 95,
@@ -160,11 +172,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-02-01',
       expansion_signal: true,
       recommended_action: 'Upsell - add seats',
-      owner: 'David Martinez',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-011',
-      account_name: 'SmallBiz Co',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Starter',
       mrr: 99,
       health_score: 35,
@@ -176,11 +188,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-05',
       expansion_signal: false,
       recommended_action: 'URGENT: Account recovery',
-      owner: 'Emily Davis',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-012',
-      account_name: 'ScaleUp Ventures',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 7200,
       health_score: 82,
@@ -192,11 +204,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-29',
       expansion_signal: true,
       recommended_action: 'Quarterly review',
-      owner: 'Sarah Johnson',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-013',
-      account_name: 'Digital Dynamics',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 4100,
       health_score: 62,
@@ -208,11 +220,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-22',
       expansion_signal: false,
       recommended_action: 'Usage analysis',
-      owner: 'Mike Chen',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-014',
-      account_name: 'FutureTech Inc',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Enterprise',
       mrr: 16800,
       health_score: 90,
@@ -224,11 +236,11 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-02-01',
       expansion_signal: true,
       recommended_action: 'Upsell - premium features',
-      owner: 'David Martinez',
+      owner: '[REDACTED]',
     },
     {
-      account_id: 'ACC-015',
-      account_name: 'Growth Partners',
+      account_id: '[REDACTED]',
+      account_name: '[REDACTED]',
       plan_tier: 'Pro',
       mrr: 5100,
       health_score: 48,
@@ -240,11 +252,14 @@ export function getClientHealthData(): ClientHealth[] {
       last_touch_date: '2026-01-18',
       expansion_signal: false,
       recommended_action: 'Refund follow-up call',
-      owner: 'Emily Davis',
+      owner: '[REDACTED]',
     },
   ]
 
-  return accounts
+  return baseAccounts.map(account => ({
+    ...account,
+    primary_risk_signal: getPrimaryRiskSignal(account),
+  }))
 }
 
 export function getKPIs() {

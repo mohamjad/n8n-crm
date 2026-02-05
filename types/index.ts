@@ -1,4 +1,4 @@
-export type Tab = 'overview' | 'dashboard' | 'alerts' | 'how-it-works'
+export type Tab = 'overview' | 'dashboard' | 'documentation'
 
 export type RiskTier = 'Healthy' | 'Watch' | 'At-Risk' | 'Critical' | 'Expansion'
 
@@ -17,4 +17,5 @@ export interface ClientHealth {
   expansion_signal: boolean
   recommended_action: string
   owner: string
+  primary_risk_signal?: string
 }

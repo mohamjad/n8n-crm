@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, AlertTriangle, BookOpen, Info } from 'lucide-react'
+import { LayoutDashboard, AlertTriangle, BookOpen } from 'lucide-react'
 import { Tab } from '../types'
 
 interface SidebarProps {
@@ -11,9 +11,8 @@ interface SidebarProps {
 export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const menuItems = [
     { id: 'overview' as Tab, label: 'Overview', icon: LayoutDashboard },
-    { id: 'dashboard' as Tab, label: 'Health Dashboard', icon: LayoutDashboard },
-    { id: 'alerts' as Tab, label: 'Alerts & Playbooks', icon: AlertTriangle },
-    { id: 'how-it-works' as Tab, label: 'How It Works', icon: Info },
+    { id: 'dashboard' as Tab, label: 'System State', icon: LayoutDashboard },
+    { id: 'documentation' as Tab, label: 'Documentation', icon: BookOpen },
   ]
 
   return (
